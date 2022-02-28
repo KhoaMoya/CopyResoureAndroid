@@ -1,5 +1,6 @@
-import java.io.File
-import kotlin.system.exitProcess
+import handler.ColorsResourceHandler
+import handler.CopyFileHandler
+import handler.StringsResourceHandler
 
 class Main {
 
@@ -11,55 +12,12 @@ class Main {
     }
 
     fun execute() {
+//        FileIO.writeObjectToFile("config.json", Builder())
+        FileIO.readConfig("config.json")
 
-//        ConfigIO.writeConfig("config.json")
-        ConfigIO.readConfig("config.json")
-
-        val listResFile = readResourceFiles()
-
-        copyToDstFolder(listResFile)
+        CopyFileHandler.execute()
+        StringsResourceHandler.execute()
+        ColorsResourceHandler.execute()
     }
 
-    private fun copyToDstFolder(resFiles: List<File>) {
-        resFiles.forEach { resFile ->
-            resFile.copyTo(
-                target = makeDstFileIfNotExists(resFile),
-                overwrite = Config.isOverwrite
-            )
-        }
-    }
-
-    private fun makeDstFileIfNotExists(resFile: File): File {
-        val dstFilePath = resFile.path.replaceFirst(Config.resFolderSource, Config.resFolderDestination)
-        val dstFile = File(dstFilePath)
-        if (!dstFile.exists()) {
-            dstFile.parentFile.mkdir()
-            dstFile.createNewFile()
-        }
-        return dstFile
-    }
-
-    private fun readResourceFiles(): List<File> {
-        val resFolder = File(Config.resFolderSource)
-        if (resFolder.exists()) {
-            val listResFile = mutableListOf<File>()
-            Config.listFileName.forEach { fileName ->
-                getFile(resFolder, fileName)?.let {
-                    listResFile.addAll(it)
-                }
-            }
-            if (listResFile.isEmpty()) {
-                System.err.println("Not file is found")
-                exitProcess(1)
-            }
-            return listResFile
-        } else {
-            System.err.println("Resource folder is not exists")
-            exitProcess(1)
-        }
-    }
-
-    private fun getFile(resFolder: File, fileName: String): List<File> {
-        return resFolder.walk().filter { it.nameWithoutExtension == fileName }.toList()
-    }
 }
