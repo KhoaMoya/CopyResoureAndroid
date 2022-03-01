@@ -12,6 +12,7 @@ object StringsResourceHandler {
     private val stringViItems = mutableListOf<String>()
 
     fun execute() {
+        if (Config.listStringName.isEmpty()) return
         readStringItems()
         writeStringItems()
     }

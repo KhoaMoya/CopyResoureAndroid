@@ -20,6 +20,9 @@ object CopyFileHandler {
                 target = makeDstFileIfNotExists(resFile),
                 overwrite = Config.isOverwrite
             )
+            if (!Config.isCopy) {
+                resFile.delete()
+            }
         }
     }
 

@@ -10,6 +10,7 @@ object ColorsResourceHandler {
     private val colorItems = mutableListOf<String>()
 
     fun execute() {
+        if (Config.listColorName.isEmpty()) return
         readColorItems()
         writeColorItems()
     }
